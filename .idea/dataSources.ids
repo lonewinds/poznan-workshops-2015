@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="Rails poznan-workshops-2015: development" uuid="6bdf60d7-fc96-49a7-b489-8bda9e4f6485">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+  <data-source name="Rails poznan-workshops-2015: test" uuid="b4d7930b-270b-4c2f-bc6e-9ed8f01a713f">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+</component>
