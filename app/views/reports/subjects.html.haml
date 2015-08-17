@@ -3,3 +3,6 @@
   list of subjects:
   - subject_items.each do |subject_item|
     .subject-item
+      = subject_item.title + ': '
+      - subject_item.students.each do |student|
+        = student.decorate.full_name + ' '

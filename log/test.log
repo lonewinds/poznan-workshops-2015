@@ -24153,3 +24153,2026 @@ FOREIGN KEY ("student_id")
   [1m[36m (0.2ms)[0m  [1mCOMMIT[0m
   [1m[35m (0.2ms)[0m  BEGIN
   [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36m (359.3ms)[0m  [1mDROP DATABASE IF EXISTS "workshops_test"[0m
+  [1m[35m (824.3ms)[0m  CREATE DATABASE "workshops_test" ENCODING = 'unicode'
+  [1m[36mSQL (11.2ms)[0m  [1mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (67.0ms)[0m  CREATE TABLE "participations" ("id" serial primary key, "student_id" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (46.0ms)[0m  [1mCREATE  INDEX  "index_participations_on_student_id" ON "participations" USING btree ("student_id")[0m
+  [1m[35m (46.1ms)[0m  CREATE  INDEX  "index_participations_on_subject_item_id" ON "participations" USING btree ("subject_item_id")
+  [1m[36m (81.6ms)[0m  [1mCREATE TABLE "students" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (56.4ms)[0m  CREATE TABLE "subject_item_notes" ("id" serial primary key, "value" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "student_id" integer) 
+  [1m[36m (46.2ms)[0m  [1mCREATE  INDEX  "index_subject_item_notes_on_subject_item_id" ON "subject_item_notes" USING btree ("subject_item_id")[0m
+  [1m[35m (54.6ms)[0m  CREATE  INDEX  "index_subject_item_notes_on_student_id" ON "subject_item_notes" USING btree ("student_id")
+  [1m[36m (81.4ms)[0m  [1mCREATE TABLE "subject_items" ("id" serial primary key, "title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "teacher_id" integer) [0m
+  [1m[35m (45.8ms)[0m  CREATE  INDEX  "index_subject_items_on_teacher_id" ON "subject_items" USING btree ("teacher_id")
+  [1m[36m (83.1ms)[0m  [1mCREATE TABLE "teachers" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "academic_title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (90.2ms)[0m  CREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (37.4ms)[0m  [1mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (38.2ms)[0m  CREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")
+  [1m[36m (7.5ms)[0m  [1mALTER TABLE "participations" ADD CONSTRAINT "fk_rails_185ff5bee8"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+[0m
+  [1m[35m (7.4ms)[0m  ALTER TABLE "participations" ADD CONSTRAINT "fk_rails_76267974c1"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+
+  [1m[36m (7.3ms)[0m  [1mALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_058a0d7ccf"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+[0m
+  [1m[35m (7.8ms)[0m  ALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_e00788d7e2"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+
+  [1m[36m (7.6ms)[0m  [1mALTER TABLE "subject_items" ADD CONSTRAINT "fk_rails_f14980cba6"
+FOREIGN KEY ("teacher_id")
+  REFERENCES "teachers" ("id")
+[0m
+  [1m[35m (45.5ms)[0m  CREATE TABLE "schema_migrations" ("version" character varying NOT NULL) 
+  [1m[36m (37.1ms)[0m  [1mCREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")[0m
+  [1m[35m (0.6ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (7.2ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150810192834')[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.6ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (27.7ms)[0m  [1mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "teachers" DISABLE TRIGGER ALL;ALTER TABLE "students" DISABLE TRIGGER ALL;ALTER TABLE "subject_items" DISABLE TRIGGER ALL;ALTER TABLE "participations" DISABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (2.0ms)[0m            SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE 
+            tablename !~ '_prt_' AND 
+            tablename <> 'schema_migrations' AND 
+            schemaname = ANY (current_schemas(false))
+
+  [1m[36m (1.8ms)[0m  [1mselect table_name from information_schema.views where table_schema = 'workshops_test'[0m
+  [1m[35m (589.3ms)[0m  TRUNCATE TABLE "public"."users", "public"."teachers", "public"."students", "public"."subject_items", "public"."participations", "public"."subject_item_notes" RESTART IDENTITY CASCADE;
+  [1m[36m (11.9ms)[0m  [1mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "teachers" ENABLE TRIGGER ALL;ALTER TABLE "students" ENABLE TRIGGER ALL;ALTER TABLE "subject_items" ENABLE TRIGGER ALL;ALTER TABLE "participations" ENABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (1.1ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:52:27.604656"], ["updated_at", "2015-08-17 19:52:27.604656"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.3ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:52:27.637091"], ["updated_at", "2015-08-17 19:52:27.637091"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (1.0ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'andreane_windler@example.net' LIMIT 1
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "andreane_windler@example.net"], ["encrypted_password", "$2a$04$yGOeUoDDxrVa35jVoImTc.r0agQqoDyjETo928HKtR4kHyu390hYG"], ["created_at", "2015-08-17 19:52:27.960705"], ["updated_at", "2015-08-17 19:52:27.960705"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:52:27 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (1.3ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (99.0ms)
+  Rendered layouts/_navigation.html.haml (11.8ms)
+  Rendered layouts/_messages.html.haml (2.9ms)
+Completed 200 OK in 324ms (Views: 312.9ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"andreane_windler@example.net", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "andreane_windler@example.net"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.6ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:52:28.371147"], ["current_sign_in_at", "2015-08-17 19:52:28.371147"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:52:28.372873"], ["id", 1]]
+  [1m[35m (0.3ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 33ms (ActiveRecord: 1.6ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (3.9ms)
+  Rendered students/index.html.haml within layouts/application (9.4ms)
+  Rendered layouts/_navigation.html.haml (1.0ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 21ms (Views: 17.7ms | ActiveRecord: 1.0ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.1ms)
+  Rendered students/index.html.haml within layouts/application (3.2ms)
+  Rendered layouts/_navigation.html.haml (1.1ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 9ms (Views: 6.2ms | ActiveRecord: 0.8ms)
+Started GET "/students/1/edit" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mSubjectItem Load (0.6ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 1]]
+  [1m[35mSubjectItem Load (0.3ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (133.4ms)
+  Rendered students/edit.html.haml within layouts/application (137.8ms)
+  Rendered layouts/_navigation.html.haml (1.0ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 144ms (Views: 139.3ms | ActiveRecord: 2.9ms)
+  [1m[36m (0.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:52:28.654801"], ["updated_at", "2015-08-17 19:52:28.654801"]]
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:52:28.657511"], ["updated_at", "2015-08-17 19:52:28.657511"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.9ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'abelardo@example.com' LIMIT 1
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "abelardo@example.com"], ["encrypted_password", "$2a$04$7MkZl0dinS3k4GbzpBOiUOFLNNhYwiR/F1GPjJZLhI7hk4cpJA6RW"], ["created_at", "2015-08-17 19:52:28.663532"], ["updated_at", "2015-08-17 19:52:28.663532"]]
+  [1m[35m (0.3ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.2ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (68.9ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 72ms (Views: 71.7ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"abelardo@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.7ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "abelardo@example.com"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.5ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:52:28.747710"], ["current_sign_in_at", "2015-08-17 19:52:28.747710"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:52:28.748554"], ["id", 2]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 8ms (ActiveRecord: 1.6ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.8ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 5.0ms | ActiveRecord: 1.0ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.7ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 4.9ms | ActiveRecord: 1.0ms)
+Started GET "/students/2/edit" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 2]]
+  [1m[36mSubjectItem Load (0.4ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 2]]
+  [1m[35mSubjectItem Load (0.2ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (74.5ms)
+  Rendered students/edit.html.haml within layouts/application (76.4ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 81ms (Views: 77.9ms | ActiveRecord: 1.3ms)
+Started PATCH "/students/2" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by StudentsController#update as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"Marcin", "last_name"=>"Abacki", "subject_item_ids"=>[""]}, "commit"=>"Update Student", "id"=>"2"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.2ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 2]]
+  [1m[36mSubjectItem Load (0.3ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 2]]
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.2ms)[0m  [1mUPDATE "students" SET "first_name" = $1, "updated_at" = $2 WHERE "students"."id" = $3[0m  [["first_name", "Marcin"], ["updated_at", "2015-08-17 19:52:28.865727"], ["id", 2]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/students/2
+Completed 302 Found in 6ms (ActiveRecord: 1.2ms)
+Started GET "/students/2" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by StudentsController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 2]]
+  Rendered students/show.html.haml within layouts/application (4.8ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 10ms (Views: 8.2ms | ActiveRecord: 0.8ms)
+  [1m[36m (0.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:52:28.889173"], ["updated_at", "2015-08-17 19:52:28.889173"]]
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:52:28.891566"], ["updated_at", "2015-08-17 19:52:28.891566"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.4ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'pink@example.com' LIMIT 1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "pink@example.com"], ["encrypted_password", "$2a$04$/t2GbEKJBofRSY3Gq0B95e1z7l0tOkAC3whYRYz0GRO/i0Miv4hgS"], ["created_at", "2015-08-17 19:52:28.896566"], ["updated_at", "2015-08-17 19:52:28.896566"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:52:28 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.4ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (101.1ms)
+  Rendered layouts/_navigation.html.haml (2.4ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 107ms (Views: 105.8ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"pink@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.8ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "pink@example.com"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.5ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:52:29.019001"], ["current_sign_in_at", "2015-08-17 19:52:29.019001"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:52:29.019841"], ["id", 3]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 11ms (ActiveRecord: 1.7ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.6ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.1ms)
+  Rendered students/index.html.haml within layouts/application (3.3ms)
+  Rendered layouts/_navigation.html.haml (1.2ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 9ms (Views: 6.5ms | ActiveRecord: 1.0ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.6ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.2ms)
+  Rendered students/index.html.haml within layouts/application (3.3ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 8ms (Views: 5.8ms | ActiveRecord: 1.1ms)
+Started GET "/students/3/edit" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"3"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 3]]
+  [1m[36mSubjectItem Load (0.7ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 3]]
+  [1m[35mSubjectItem Load (0.5ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (151.7ms)
+  Rendered students/edit.html.haml within layouts/application (154.0ms)
+  Rendered layouts/_navigation.html.haml (1.0ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 159ms (Views: 155.4ms | ActiveRecord: 2.3ms)
+Started PATCH "/students/3" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#update as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"", "last_name"=>"Abacki", "subject_item_ids"=>[""]}, "commit"=>"Update Student", "id"=>"3"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 3]]
+  [1m[36mSubjectItem Load (0.6ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 3]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35mSubjectItem Load (0.5ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (108.5ms)
+  Rendered students/edit.html.haml within layouts/application (108.9ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 119ms (Views: 111.1ms | ActiveRecord: 2.4ms)
+  [1m[36m (0.4ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:52:29.345439"], ["updated_at", "2015-08-17 19:52:29.345439"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:52:29.348174"], ["updated_at", "2015-08-17 19:52:29.348174"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'halle_wunsch@example.org' LIMIT 1
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "halle_wunsch@example.org"], ["encrypted_password", "$2a$04$5pmBxnlhpGo2PLQ12fQ5au2AK9v6AQYvN3IJQHzDsTd7Et37x1sAi"], ["created_at", "2015-08-17 19:52:29.353779"], ["updated_at", "2015-08-17 19:52:29.353779"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.3ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (59.6ms)
+  Rendered layouts/_navigation.html.haml (1.2ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 64ms (Views: 62.8ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"halle_wunsch@example.org", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.7ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "halle_wunsch@example.org"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.5ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:52:29.430525"], ["current_sign_in_at", "2015-08-17 19:52:29.430525"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:52:29.431393"], ["id", 4]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 9ms (ActiveRecord: 1.5ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.0ms)
+  Rendered students/index.html.haml within layouts/application (2.9ms)
+  Rendered layouts/_navigation.html.haml (1.0ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 8ms (Views: 5.3ms | ActiveRecord: 0.9ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.0ms)
+  Rendered students/index.html.haml within layouts/application (2.7ms)
+  Rendered layouts/_navigation.html.haml (1.1ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 8ms (Views: 5.9ms | ActiveRecord: 0.8ms)
+Started GET "/students/4/edit" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"4"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 4]]
+  [1m[36mSubjectItem Load (0.7ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 4]]
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (97.6ms)
+  Rendered students/edit.html.haml within layouts/application (99.7ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 104ms (Views: 101.2ms | ActiveRecord: 1.8ms)
+Started GET "/reports" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by ReportsController#subjects as HTML
+  [1m[36mSubjectItem Load (0.3ms)[0m  [1mSELECT "subject_items".* FROM "subject_items"[0m
+  [1m[35mParticipation Load (0.4ms)[0m  SELECT "participations".* FROM "participations" WHERE "participations"."subject_item_id" IN (4)
+  Rendered reports/subjects.html.haml within layouts/application (24.0ms)
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  Rendered layouts/_navigation.html.haml (2.6ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 31ms (Views: 28.3ms | ActiveRecord: 2.0ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.4ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered students/_student.haml (1.2ms)
+  Rendered students/index.html.haml within layouts/application (3.2ms)
+  Rendered layouts/_navigation.html.haml (1.3ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 9ms (Views: 6.9ms | ActiveRecord: 0.7ms)
+Started GET "/students/4/edit" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"4"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.2ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 4]]
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1  [["student_id", 4]]
+  [1m[36mSubjectItem Load (0.4ms)[0m  [1mSELECT "subject_items".* FROM "subject_items"[0m
+  Rendered students/_form.html.haml (103.6ms)
+  Rendered students/edit.html.haml within layouts/application (105.3ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 110ms (Views: 107.3ms | ActiveRecord: 1.3ms)
+Started PATCH "/students/4" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#update as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"Jan", "last_name"=>"Abacki", "subject_item_ids"=>["4", ""]}, "commit"=>"Update Student", "id"=>"4"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.3ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 4]]
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT  "subject_items".* FROM "subject_items" WHERE "subject_items"."id" = $1 LIMIT 1  [["id", 4]]
+  [1m[36mSubjectItem Load (0.3ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 4]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mParticipation Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "participations" WHERE ("participations"."student_id" = 4 AND "participations"."subject_item_id" = 4) LIMIT 1[0m
+  [1m[35mSQL (1.2ms)[0m  INSERT INTO "participations" ("student_id", "subject_item_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["student_id", 4], ["subject_item_id", 4], ["created_at", "2015-08-17 19:52:29.758070"], ["updated_at", "2015-08-17 19:52:29.758070"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/students/4
+Completed 302 Found in 19ms (ActiveRecord: 4.7ms)
+Started GET "/students/4" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by StudentsController#show as HTML
+  Parameters: {"id"=>"4"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.3ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 4]]
+  Rendered students/show.html.haml within layouts/application (2.3ms)
+  Rendered layouts/_navigation.html.haml (1.0ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 8ms (Views: 5.5ms | ActiveRecord: 0.7ms)
+Started GET "/reports" for 127.0.0.1 at 2015-08-17 21:52:29 +0200
+Processing by ReportsController#subjects as HTML
+  [1m[35mSubjectItem Load (0.5ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  [1m[36mParticipation Load (0.5ms)[0m  [1mSELECT "participations".* FROM "participations" WHERE "participations"."subject_item_id" IN (4)[0m
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students" WHERE "students"."id" IN (4)
+  Rendered reports/subjects.html.haml within layouts/application (4.5ms)
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  Rendered layouts/_navigation.html.haml (2.5ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 10ms (Views: 7.6ms | ActiveRecord: 1.8ms)
+  [1m[35m (0.3ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36m (221.7ms)[0m  [1mDROP DATABASE IF EXISTS "workshops_test"[0m
+  [1m[35m (541.2ms)[0m  CREATE DATABASE "workshops_test" ENCODING = 'unicode'
+  [1m[36mSQL (0.4ms)[0m  [1mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (45.8ms)[0m  CREATE TABLE "participations" ("id" serial primary key, "student_id" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (45.8ms)[0m  [1mCREATE  INDEX  "index_participations_on_student_id" ON "participations" USING btree ("student_id")[0m
+  [1m[35m (55.1ms)[0m  CREATE  INDEX  "index_participations_on_subject_item_id" ON "participations" USING btree ("subject_item_id")
+  [1m[36m (81.8ms)[0m  [1mCREATE TABLE "students" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (47.5ms)[0m  CREATE TABLE "subject_item_notes" ("id" serial primary key, "value" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "student_id" integer) 
+  [1m[36m (46.0ms)[0m  [1mCREATE  INDEX  "index_subject_item_notes_on_subject_item_id" ON "subject_item_notes" USING btree ("subject_item_id")[0m
+  [1m[35m (46.2ms)[0m  CREATE  INDEX  "index_subject_item_notes_on_student_id" ON "subject_item_notes" USING btree ("student_id")
+  [1m[36m (81.4ms)[0m  [1mCREATE TABLE "subject_items" ("id" serial primary key, "title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "teacher_id" integer) [0m
+  [1m[35m (37.7ms)[0m  CREATE  INDEX  "index_subject_items_on_teacher_id" ON "subject_items" USING btree ("teacher_id")
+  [1m[36m (90.1ms)[0m  [1mCREATE TABLE "teachers" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "academic_title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (89.4ms)[0m  CREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (45.7ms)[0m  [1mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (47.1ms)[0m  CREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")
+  [1m[36m (7.4ms)[0m  [1mALTER TABLE "participations" ADD CONSTRAINT "fk_rails_185ff5bee8"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+[0m
+  [1m[35m (7.6ms)[0m  ALTER TABLE "participations" ADD CONSTRAINT "fk_rails_76267974c1"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+
+  [1m[36m (8.0ms)[0m  [1mALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_058a0d7ccf"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+[0m
+  [1m[35m (7.7ms)[0m  ALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_e00788d7e2"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+
+  [1m[36m (7.4ms)[0m  [1mALTER TABLE "subject_items" ADD CONSTRAINT "fk_rails_f14980cba6"
+FOREIGN KEY ("teacher_id")
+  REFERENCES "teachers" ("id")
+[0m
+  [1m[35m (46.1ms)[0m  CREATE TABLE "schema_migrations" ("version" character varying NOT NULL) 
+  [1m[36m (46.1ms)[0m  [1mCREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")[0m
+  [1m[35m (0.8ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (6.8ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150810192834')[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.5ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (6.5ms)[0m  [1mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "teachers" DISABLE TRIGGER ALL;ALTER TABLE "students" DISABLE TRIGGER ALL;ALTER TABLE "subject_items" DISABLE TRIGGER ALL;ALTER TABLE "participations" DISABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (2.7ms)[0m            SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE 
+            tablename !~ '_prt_' AND 
+            tablename <> 'schema_migrations' AND 
+            schemaname = ANY (current_schemas(false))
+
+  [1m[36m (2.7ms)[0m  [1mselect table_name from information_schema.views where table_schema = 'workshops_test'[0m
+  [1m[35m (571.4ms)[0m  TRUNCATE TABLE "public"."users", "public"."teachers", "public"."students", "public"."subject_items", "public"."participations", "public"."subject_item_notes" RESTART IDENTITY CASCADE;
+  [1m[36m (3.8ms)[0m  [1mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "teachers" ENABLE TRIGGER ALL;ALTER TABLE "students" ENABLE TRIGGER ALL;ALTER TABLE "subject_items" ENABLE TRIGGER ALL;ALTER TABLE "participations" ENABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:56:05.320248"], ["updated_at", "2015-08-17 19:56:05.320248"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.3ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:56:05.345869"], ["updated_at", "2015-08-17 19:56:05.345869"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.7ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'trystan@example.com' LIMIT 1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "trystan@example.com"], ["encrypted_password", "$2a$04$7OBAmTLqALCGSEkxaw0MFe2MRHxSiPoKRZaQVS3OKw8wMnwYl1FmO"], ["created_at", "2015-08-17 19:56:05.649559"], ["updated_at", "2015-08-17 19:56:05.649559"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:05 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (103.0ms)
+  Rendered layouts/_navigation.html.haml (8.8ms)
+  Rendered layouts/_messages.html.haml (2.2ms)
+Completed 200 OK in 297ms (Views: 285.6ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:05 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"trystan@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "trystan@example.com"]]
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.2ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:56:05.988257"], ["current_sign_in_at", "2015-08-17 19:56:05.988257"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:05.989043"], ["id", 1]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 16ms (ActiveRecord: 0.8ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:05 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (34.6ms)
+  Rendered students/index.html.haml within layouts/application (39.0ms)
+  Rendered layouts/_navigation.html.haml (0.6ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 47ms (Views: 44.8ms | ActiveRecord: 0.6ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (0.8ms)
+  Rendered students/index.html.haml within layouts/application (2.4ms)
+  Rendered layouts/_navigation.html.haml (0.6ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 4.5ms | ActiveRecord: 0.8ms)
+Started GET "/students/1/edit" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mSubjectItem Load (0.5ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 1]]
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (113.2ms)
+  Rendered students/edit.html.haml within layouts/application (116.2ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 121ms (Views: 117.3ms | ActiveRecord: 2.2ms)
+  [1m[36m (0.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:56:06.200821"], ["updated_at", "2015-08-17 19:56:06.200821"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:56:06.203335"], ["updated_at", "2015-08-17 19:56:06.203335"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.5ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'pink.dooley@example.com' LIMIT 1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "pink.dooley@example.com"], ["encrypted_password", "$2a$04$AtAGkL8huHTaJXegY8..6.jxDSfc5r5qrUWreMDD7QM6sXwVaPgdy"], ["created_at", "2015-08-17 19:56:06.209717"], ["updated_at", "2015-08-17 19:56:06.209717"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.3ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (67.4ms)
+  Rendered layouts/_navigation.html.haml (1.0ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 71ms (Views: 70.1ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"pink.dooley@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "pink.dooley@example.com"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.3ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:56:06.293657"], ["current_sign_in_at", "2015-08-17 19:56:06.293657"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:06.294442"], ["id", 2]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 8ms (ActiveRecord: 1.0ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.9ms)
+  Rendered students/index.html.haml within layouts/application (4.0ms)
+  Rendered layouts/_navigation.html.haml (1.2ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 9ms (Views: 6.7ms | ActiveRecord: 0.9ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (3.1ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 5.3ms | ActiveRecord: 0.9ms)
+Started GET "/students/2/edit" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 2]]
+  [1m[36mSubjectItem Load (0.5ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 2]]
+  [1m[35mSubjectItem Load (0.2ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (78.1ms)
+  Rendered students/edit.html.haml within layouts/application (80.0ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 86ms (Views: 83.4ms | ActiveRecord: 1.6ms)
+Started PATCH "/students/2" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#update as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"Marcin", "last_name"=>"Abacki", "subject_item_ids"=>[""]}, "commit"=>"Update Student", "id"=>"2"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 2]]
+  [1m[36mSubjectItem Load (0.4ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 2]]
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.2ms)[0m  [1mUPDATE "students" SET "first_name" = $1, "updated_at" = $2 WHERE "students"."id" = $3[0m  [["first_name", "Marcin"], ["updated_at", "2015-08-17 19:56:06.419945"], ["id", 2]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/students/2
+Completed 302 Found in 7ms (ActiveRecord: 1.7ms)
+Started GET "/students/2" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 2]]
+  Rendered students/show.html.haml within layouts/application (3.3ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 8ms (Views: 5.7ms | ActiveRecord: 0.6ms)
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:56:06.440261"], ["updated_at", "2015-08-17 19:56:06.440261"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:56:06.442428"], ["updated_at", "2015-08-17 19:56:06.442428"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.4ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'ona@example.net' LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "ona@example.net"], ["encrypted_password", "$2a$04$cvpiioS0oSUdlMN4KrTHQu4vgbkN9o7q4.4SupZBRbXU.U0hpOsLW"], ["created_at", "2015-08-17 19:56:06.448344"], ["updated_at", "2015-08-17 19:56:06.448344"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.4ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (77.6ms)
+  Rendered layouts/_navigation.html.haml (1.6ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 83ms (Views: 81.5ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"ona@example.net", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "ona@example.net"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.3ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:56:06.545707"], ["current_sign_in_at", "2015-08-17 19:56:06.545707"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:06.547367"], ["id", 3]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 11ms (ActiveRecord: 1.3ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.4ms)
+  Rendered students/index.html.haml within layouts/application (3.8ms)
+  Rendered layouts/_navigation.html.haml (1.5ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 11ms (Views: 8.1ms | ActiveRecord: 0.8ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.3ms)
+  Rendered students/index.html.haml within layouts/application (3.6ms)
+  Rendered layouts/_navigation.html.haml (1.3ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 9ms (Views: 6.9ms | ActiveRecord: 0.6ms)
+Started GET "/students/3/edit" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"3"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 3]]
+  [1m[36mSubjectItem Load (0.6ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 3]]
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (161.8ms)
+  Rendered students/edit.html.haml within layouts/application (164.5ms)
+  Rendered layouts/_navigation.html.haml (1.1ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 171ms (Views: 167.2ms | ActiveRecord: 1.9ms)
+Started PATCH "/students/3" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by StudentsController#update as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"", "last_name"=>"Abacki", "subject_item_ids"=>[""]}, "commit"=>"Update Student", "id"=>"3"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 3]]
+  [1m[36mSubjectItem Load (0.3ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 3]]
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (119.6ms)
+  Rendered students/edit.html.haml within layouts/application (119.9ms)
+  Rendered layouts/_navigation.html.haml (1.1ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 131ms (Views: 122.6ms | ActiveRecord: 1.7ms)
+  [1m[36m (0.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:56:06.904331"], ["updated_at", "2015-08-17 19:56:06.904331"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:56:06.907195"], ["updated_at", "2015-08-17 19:56:06.907195"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.5ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'hank@example.net' LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "hank@example.net"], ["encrypted_password", "$2a$04$LEq1jYRq469u7VBBwhfgEuz8rQBSIqFwH8ymbzxfMUTlm6.5ExoTG"], ["created_at", "2015-08-17 19:56:06.914311"], ["updated_at", "2015-08-17 19:56:06.914311"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:06 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.3ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (72.9ms)
+  Rendered layouts/_navigation.html.haml (1.0ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 77ms (Views: 75.7ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:07 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"hank@example.net", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "hank@example.net"]]
+  [1m[35m (0.3ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.5ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:56:07.005061"], ["current_sign_in_at", "2015-08-17 19:56:07.005061"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:07.006109"], ["id", 4]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 11ms (ActiveRecord: 1.5ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:07 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.2ms)
+  Rendered students/index.html.haml within layouts/application (3.4ms)
+  Rendered layouts/_navigation.html.haml (1.0ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 9ms (Views: 6.5ms | ActiveRecord: 0.6ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:07 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.1ms)
+  Rendered students/index.html.haml within layouts/application (2.9ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.3ms)
+Completed 200 OK in 8ms (Views: 5.8ms | ActiveRecord: 0.6ms)
+Started GET "/students/4/edit" for 127.0.0.1 at 2015-08-17 21:56:07 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"4"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  [1m[35mStudent Load (0.2ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 4]]
+  [1m[36mSubjectItem Load (0.5ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 4]]
+  [1m[35mSubjectItem Load (0.3ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (106.8ms)
+  Rendered students/edit.html.haml within layouts/application (108.9ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 113ms (Views: 110.4ms | ActiveRecord: 1.2ms)
+Started GET "/reports" for 127.0.0.1 at 2015-08-17 21:56:07 +0200
+Processing by ReportsController#subjects as HTML
+  [1m[36mSubjectItem Load (0.4ms)[0m  [1mSELECT "subject_items".* FROM "subject_items"[0m
+  [1m[35mParticipation Load (0.5ms)[0m  SELECT "participations".* FROM "participations" WHERE "participations"."subject_item_id" IN (4)
+  Rendered reports/subjects.html.haml within layouts/application (29.4ms)
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  Rendered layouts/_navigation.html.haml (2.1ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 35ms (Views: 31.9ms | ActiveRecord: 2.3ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:07 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.3ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.4ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 5.1ms | ActiveRecord: 0.6ms)
+Started GET "/students/4/edit" for 127.0.0.1 at 2015-08-17 21:56:07 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"4"}
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.3ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 4]]
+  [1m[35mSubjectItem Load (0.3ms)[0m  SELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1  [["student_id", 4]]
+  [1m[36mSubjectItem Load (0.2ms)[0m  [1mSELECT "subject_items".* FROM "subject_items"[0m
+  Rendered students/_form.html.haml (117.1ms)
+  Rendered students/edit.html.haml within layouts/application (120.2ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 126ms (Views: 122.2ms | ActiveRecord: 1.3ms)
+Started PATCH "/students/4" for 127.0.0.1 at 2015-08-17 21:56:07 +0200
+Processing by StudentsController#update as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"Jan", "last_name"=>"Abacki", "subject_item_ids"=>["4", ""]}, "commit"=>"Update Student", "id"=>"4"}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.2ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 4]]
+  [1m[35mSubjectItem Load (0.2ms)[0m  SELECT  "subject_items".* FROM "subject_items" WHERE "subject_items"."id" = $1 LIMIT 1  [["id", 4]]
+  [1m[36mSubjectItem Load (0.1ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 4]]
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mParticipation Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "participations" WHERE ("participations"."student_id" = 4 AND "participations"."subject_item_id" = 4) LIMIT 1[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "participations" ("student_id", "subject_item_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["student_id", 4], ["subject_item_id", 4], ["created_at", "2015-08-17 19:56:07.353249"], ["updated_at", "2015-08-17 19:56:07.353249"]]
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/students/4
+Completed 302 Found in 14ms (ActiveRecord: 2.7ms)
+Started GET "/students/4" for 127.0.0.1 at 2015-08-17 21:56:07 +0200
+Processing by StudentsController#show as HTML
+  Parameters: {"id"=>"4"}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.3ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 4]]
+  Rendered students/show.html.haml within layouts/application (2.0ms)
+  Rendered layouts/_navigation.html.haml (1.0ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 4.7ms | ActiveRecord: 0.5ms)
+Started GET "/reports" for 127.0.0.1 at 2015-08-17 21:56:07 +0200
+Processing by ReportsController#subjects as HTML
+  [1m[35mSubjectItem Load (0.5ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  [1m[36mParticipation Load (0.5ms)[0m  [1mSELECT "participations".* FROM "participations" WHERE "participations"."subject_item_id" IN (4)[0m
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students" WHERE "students"."id" IN (4)
+  Rendered reports/subjects.html.haml within layouts/application (9.4ms)
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  Rendered layouts/_navigation.html.haml (2.4ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 15ms (Views: 12.2ms | ActiveRecord: 1.9ms)
+  [1m[35m (0.3ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36m (227.8ms)[0m  [1mDROP DATABASE IF EXISTS "workshops_test"[0m
+  [1m[35m (557.5ms)[0m  CREATE DATABASE "workshops_test" ENCODING = 'unicode'
+  [1m[36mSQL (0.3ms)[0m  [1mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (44.5ms)[0m  CREATE TABLE "participations" ("id" serial primary key, "student_id" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (38.2ms)[0m  [1mCREATE  INDEX  "index_participations_on_student_id" ON "participations" USING btree ("student_id")[0m
+  [1m[35m (38.2ms)[0m  CREATE  INDEX  "index_participations_on_subject_item_id" ON "participations" USING btree ("subject_item_id")
+  [1m[36m (91.3ms)[0m  [1mCREATE TABLE "students" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (39.6ms)[0m  CREATE TABLE "subject_item_notes" ("id" serial primary key, "value" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "student_id" integer) 
+  [1m[36m (37.9ms)[0m  [1mCREATE  INDEX  "index_subject_item_notes_on_subject_item_id" ON "subject_item_notes" USING btree ("subject_item_id")[0m
+  [1m[35m (46.4ms)[0m  CREATE  INDEX  "index_subject_item_notes_on_student_id" ON "subject_item_notes" USING btree ("student_id")
+  [1m[36m (89.1ms)[0m  [1mCREATE TABLE "subject_items" ("id" serial primary key, "title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "teacher_id" integer) [0m
+  [1m[35m (46.0ms)[0m  CREATE  INDEX  "index_subject_items_on_teacher_id" ON "subject_items" USING btree ("teacher_id")
+  [1m[36m (89.5ms)[0m  [1mCREATE TABLE "teachers" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "academic_title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (75.4ms)[0m  CREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (46.3ms)[0m  [1mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (46.4ms)[0m  CREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")
+  [1m[36m (7.4ms)[0m  [1mALTER TABLE "participations" ADD CONSTRAINT "fk_rails_185ff5bee8"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+[0m
+  [1m[35m (7.4ms)[0m  ALTER TABLE "participations" ADD CONSTRAINT "fk_rails_76267974c1"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+
+  [1m[36m (7.6ms)[0m  [1mALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_058a0d7ccf"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+[0m
+  [1m[35m (7.5ms)[0m  ALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_e00788d7e2"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+
+  [1m[36m (7.7ms)[0m  [1mALTER TABLE "subject_items" ADD CONSTRAINT "fk_rails_f14980cba6"
+FOREIGN KEY ("teacher_id")
+  REFERENCES "teachers" ("id")
+[0m
+  [1m[35m (54.0ms)[0m  CREATE TABLE "schema_migrations" ("version" character varying NOT NULL) 
+  [1m[36m (46.4ms)[0m  [1mCREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")[0m
+  [1m[35m (0.7ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (6.7ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150810192834')[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.5ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (18.0ms)[0m  [1mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "teachers" DISABLE TRIGGER ALL;ALTER TABLE "students" DISABLE TRIGGER ALL;ALTER TABLE "subject_items" DISABLE TRIGGER ALL;ALTER TABLE "participations" DISABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (2.9ms)[0m            SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE 
+            tablename !~ '_prt_' AND 
+            tablename <> 'schema_migrations' AND 
+            schemaname = ANY (current_schemas(false))
+
+  [1m[36m (2.8ms)[0m  [1mselect table_name from information_schema.views where table_schema = 'workshops_test'[0m
+  [1m[35m (595.9ms)[0m  TRUNCATE TABLE "public"."users", "public"."teachers", "public"."students", "public"."subject_items", "public"."participations", "public"."subject_item_notes" RESTART IDENTITY CASCADE;
+  [1m[36m (11.8ms)[0m  [1mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "teachers" ENABLE TRIGGER ALL;ALTER TABLE "students" ENABLE TRIGGER ALL;ALTER TABLE "subject_items" ENABLE TRIGGER ALL;ALTER TABLE "participations" ENABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.4ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Nowak"], ["created_at", "2015-08-17 19:56:23.676534"], ["updated_at", "2015-08-17 19:56:23.676534"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mUser Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."email" = 'trudie_dooley@example.com' LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["email", "trudie_dooley@example.com"], ["encrypted_password", "$2a$04$TZNJCDrHEjj4HwxTt8047eijO9jtgAEoNZwznSVl0wKrNgksi3X2i"], ["created_at", "2015-08-17 19:56:23.970968"], ["updated_at", "2015-08-17 19:56:23.970968"]]
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:23 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (1.3ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (97.2ms)
+  Rendered layouts/_navigation.html.haml (7.2ms)
+  Rendered layouts/_messages.html.haml (1.4ms)
+Completed 200 OK in 295ms (Views: 283.5ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:24 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"trudie_dooley@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[35mUser Load (0.7ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["email", "trudie_dooley@example.com"]]
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.5ms)[0m  UPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7  [["last_sign_in_at", "2015-08-17 19:56:24.301736"], ["current_sign_in_at", "2015-08-17 19:56:24.301736"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:24.302859"], ["id", 1]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 18ms (ActiveRecord: 1.5ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:24 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mStudent Load (0.6ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered students/_student.haml (2.7ms)
+  Rendered students/index.html.haml within layouts/application (7.1ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 16ms (Views: 12.9ms | ActiveRecord: 1.1ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:24 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mStudent Load (0.4ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.6ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 4.6ms | ActiveRecord: 0.9ms)
+Started GET "/students/1" for 127.0.0.1 at 2015-08-17 21:56:24 +0200
+Processing by StudentsController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mStudent Load (0.4ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  Rendered students/show.html.haml within layouts/application (3.5ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 8ms (Views: 6.0ms | ActiveRecord: 0.9ms)
+  [1m[35m (0.4ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36m (927.9ms)[0m  [1mDROP DATABASE IF EXISTS "workshops_test"[0m
+  [1m[35m (540.9ms)[0m  CREATE DATABASE "workshops_test" ENCODING = 'unicode'
+  [1m[36mSQL (0.5ms)[0m  [1mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (51.2ms)[0m  CREATE TABLE "participations" ("id" serial primary key, "student_id" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (45.7ms)[0m  [1mCREATE  INDEX  "index_participations_on_student_id" ON "participations" USING btree ("student_id")[0m
+  [1m[35m (46.5ms)[0m  CREATE  INDEX  "index_participations_on_subject_item_id" ON "participations" USING btree ("subject_item_id")
+  [1m[36m (98.2ms)[0m  [1mCREATE TABLE "students" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (56.4ms)[0m  CREATE TABLE "subject_item_notes" ("id" serial primary key, "value" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "student_id" integer) 
+  [1m[36m (37.6ms)[0m  [1mCREATE  INDEX  "index_subject_item_notes_on_subject_item_id" ON "subject_item_notes" USING btree ("subject_item_id")[0m
+  [1m[35m (46.2ms)[0m  CREATE  INDEX  "index_subject_item_notes_on_student_id" ON "subject_item_notes" USING btree ("student_id")
+  [1m[36m (65.0ms)[0m  [1mCREATE TABLE "subject_items" ("id" serial primary key, "title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "teacher_id" integer) [0m
+  [1m[35m (38.3ms)[0m  CREATE  INDEX  "index_subject_items_on_teacher_id" ON "subject_items" USING btree ("teacher_id")
+  [1m[36m (81.4ms)[0m  [1mCREATE TABLE "teachers" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "academic_title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (74.4ms)[0m  CREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (46.4ms)[0m  [1mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (46.5ms)[0m  CREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")
+  [1m[36m (7.4ms)[0m  [1mALTER TABLE "participations" ADD CONSTRAINT "fk_rails_185ff5bee8"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+[0m
+  [1m[35m (7.4ms)[0m  ALTER TABLE "participations" ADD CONSTRAINT "fk_rails_76267974c1"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+
+  [1m[36m (7.7ms)[0m  [1mALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_058a0d7ccf"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+[0m
+  [1m[35m (7.6ms)[0m  ALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_e00788d7e2"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+
+  [1m[36m (7.3ms)[0m  [1mALTER TABLE "subject_items" ADD CONSTRAINT "fk_rails_f14980cba6"
+FOREIGN KEY ("teacher_id")
+  REFERENCES "teachers" ("id")
+[0m
+  [1m[35m (45.8ms)[0m  CREATE TABLE "schema_migrations" ("version" character varying NOT NULL) 
+  [1m[36m (37.7ms)[0m  [1mCREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")[0m
+  [1m[35m (0.8ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (6.5ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150810192834')[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.5ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (12.1ms)[0m  [1mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "teachers" DISABLE TRIGGER ALL;ALTER TABLE "students" DISABLE TRIGGER ALL;ALTER TABLE "subject_items" DISABLE TRIGGER ALL;ALTER TABLE "participations" DISABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (1.8ms)[0m            SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE 
+            tablename !~ '_prt_' AND 
+            tablename <> 'schema_migrations' AND 
+            schemaname = ANY (current_schemas(false))
+
+  [1m[36m (1.7ms)[0m  [1mselect table_name from information_schema.views where table_schema = 'workshops_test'[0m
+  [1m[35m (540.2ms)[0m  TRUNCATE TABLE "public"."users", "public"."teachers", "public"."students", "public"."subject_items", "public"."participations", "public"."subject_item_notes" RESTART IDENTITY CASCADE;
+  [1m[36m (3.6ms)[0m  [1mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "teachers" ENABLE TRIGGER ALL;ALTER TABLE "students" ENABLE TRIGGER ALL;ALTER TABLE "subject_items" ENABLE TRIGGER ALL;ALTER TABLE "participations" ENABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Nowak"], ["created_at", "2015-08-17 19:56:32.797510"], ["updated_at", "2015-08-17 19:56:32.797510"]]
+  [1m[36m (0.3ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.3ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:56:32.823030"], ["updated_at", "2015-08-17 19:56:32.823030"]]
+  [1m[35m (0.3ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mParticipation Exists (1.0ms)[0m  SELECT  1 AS one FROM "participations" WHERE ("participations"."student_id" = 1 AND "participations"."subject_item_id" = 1) LIMIT 1
+  [1m[36mSQL (1.5ms)[0m  [1mINSERT INTO "participations" ("student_id", "subject_item_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["student_id", 1], ["subject_item_id", 1], ["created_at", "2015-08-17 19:56:32.857693"], ["updated_at", "2015-08-17 19:56:32.857693"]]
+  [1m[35m (0.3ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (1.6ms)[0m  INSERT INTO "subject_item_notes" ("value", "student_id", "subject_item_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"  [["value", 1], ["student_id", 1], ["subject_item_id", 1], ["created_at", "2015-08-17 19:56:32.892381"], ["updated_at", "2015-08-17 19:56:32.892381"]]
+  [1m[36m (0.3ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mUser Exists (0.9ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."email" = 'jasen@example.org' LIMIT 1[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["email", "jasen@example.org"], ["encrypted_password", "$2a$04$IYQ.KgI3P5cQY9zkDKP32ewdMsfbTAMMrdpdYecwqvU9oZlCdrbsq"], ["created_at", "2015-08-17 19:56:33.173660"], ["updated_at", "2015-08-17 19:56:33.173660"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:33 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (99.2ms)
+  Rendered layouts/_navigation.html.haml (4.2ms)
+  Rendered layouts/_messages.html.haml (1.1ms)
+Completed 200 OK in 320ms (Views: 309.3ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:33 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"jasen@example.org", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[35mUser Load (0.8ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["email", "jasen@example.org"]]
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.5ms)[0m  UPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7  [["last_sign_in_at", "2015-08-17 19:56:33.529204"], ["current_sign_in_at", "2015-08-17 19:56:33.529204"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:33.530084"], ["id", 1]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 16ms (ActiveRecord: 1.7ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:33 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mStudent Load (0.5ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered students/_student.haml (2.8ms)
+  Rendered students/index.html.haml within layouts/application (6.8ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 16ms (Views: 12.8ms | ActiveRecord: 0.9ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:33 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mStudent Load (0.4ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.7ms)
+  Rendered layouts/_navigation.html.haml (1.7ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 9ms (Views: 6.7ms | ActiveRecord: 0.8ms)
+Started GET "/students/1/subjects" for 127.0.0.1 at 2015-08-17 21:56:33 +0200
+Processing by StudentsController#subjects as HTML
+  Parameters: {"student_id"=>"1"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mStudent Load (0.2ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1  [["student_id", 1]]
+  [1m[36mSubjectItemNote Load (0.5ms)[0m  [1mSELECT "subject_item_notes".* FROM "subject_item_notes" WHERE "subject_item_notes"."subject_item_id" = $1[0m  [["subject_item_id", 1]]
+  Rendered students/subjects.html.haml within layouts/application (27.6ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 33ms (Views: 29.7ms | ActiveRecord: 1.4ms)
+  [1m[35m (0.4ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36m (222.0ms)[0m  [1mDROP DATABASE IF EXISTS "workshops_test"[0m
+  [1m[35m (532.9ms)[0m  CREATE DATABASE "workshops_test" ENCODING = 'unicode'
+  [1m[36mSQL (0.5ms)[0m  [1mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (64.3ms)[0m  CREATE TABLE "participations" ("id" serial primary key, "student_id" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (54.3ms)[0m  [1mCREATE  INDEX  "index_participations_on_student_id" ON "participations" USING btree ("student_id")[0m
+  [1m[35m (46.3ms)[0m  CREATE  INDEX  "index_participations_on_subject_item_id" ON "participations" USING btree ("subject_item_id")
+  [1m[36m (73.6ms)[0m  [1mCREATE TABLE "students" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (47.6ms)[0m  CREATE TABLE "subject_item_notes" ("id" serial primary key, "value" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "student_id" integer) 
+  [1m[36m (38.2ms)[0m  [1mCREATE  INDEX  "index_subject_item_notes_on_subject_item_id" ON "subject_item_notes" USING btree ("subject_item_id")[0m
+  [1m[35m (46.0ms)[0m  CREATE  INDEX  "index_subject_item_notes_on_student_id" ON "subject_item_notes" USING btree ("student_id")
+  [1m[36m (72.9ms)[0m  [1mCREATE TABLE "subject_items" ("id" serial primary key, "title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "teacher_id" integer) [0m
+  [1m[35m (46.1ms)[0m  CREATE  INDEX  "index_subject_items_on_teacher_id" ON "subject_items" USING btree ("teacher_id")
+  [1m[36m (89.1ms)[0m  [1mCREATE TABLE "teachers" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "academic_title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (66.0ms)[0m  CREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (39.0ms)[0m  [1mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (38.1ms)[0m  CREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")
+  [1m[36m (7.3ms)[0m  [1mALTER TABLE "participations" ADD CONSTRAINT "fk_rails_185ff5bee8"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+[0m
+  [1m[35m (7.5ms)[0m  ALTER TABLE "participations" ADD CONSTRAINT "fk_rails_76267974c1"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+
+  [1m[36m (7.3ms)[0m  [1mALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_058a0d7ccf"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+[0m
+  [1m[35m (7.3ms)[0m  ALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_e00788d7e2"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+
+  [1m[36m (7.6ms)[0m  [1mALTER TABLE "subject_items" ADD CONSTRAINT "fk_rails_f14980cba6"
+FOREIGN KEY ("teacher_id")
+  REFERENCES "teachers" ("id")
+[0m
+  [1m[35m (45.4ms)[0m  CREATE TABLE "schema_migrations" ("version" character varying NOT NULL) 
+  [1m[36m (46.5ms)[0m  [1mCREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")[0m
+  [1m[35m (0.7ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (6.5ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150810192834')[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.5ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (20.8ms)[0m  [1mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "teachers" DISABLE TRIGGER ALL;ALTER TABLE "students" DISABLE TRIGGER ALL;ALTER TABLE "subject_items" DISABLE TRIGGER ALL;ALTER TABLE "participations" DISABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (2.5ms)[0m            SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE 
+            tablename !~ '_prt_' AND 
+            tablename <> 'schema_migrations' AND 
+            schemaname = ANY (current_schemas(false))
+
+  [1m[36m (2.2ms)[0m  [1mselect table_name from information_schema.views where table_schema = 'workshops_test'[0m
+  [1m[35m (530.1ms)[0m  TRUNCATE TABLE "public"."users", "public"."teachers", "public"."students", "public"."subject_items", "public"."participations", "public"."subject_item_notes" RESTART IDENTITY CASCADE;
+  [1m[36m (3.4ms)[0m  [1mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "teachers" ENABLE TRIGGER ALL;ALTER TABLE "students" ENABLE TRIGGER ALL;ALTER TABLE "subject_items" ENABLE TRIGGER ALL;ALTER TABLE "participations" ENABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (1.0ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'christop_cummings@example.com' LIMIT 1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "christop_cummings@example.com"], ["encrypted_password", "$2a$04$.fcMdvIgCLRQ.3nTbfGd1ejU9gI2zc6evgrhlzpEMyf3YVwbRVx/i"], ["created_at", "2015-08-17 19:56:44.427552"], ["updated_at", "2015-08-17 19:56:44.427552"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:44 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (1.3ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (100.8ms)
+  Rendered layouts/_navigation.html.haml (34.3ms)
+  Rendered layouts/_messages.html.haml (1.2ms)
+Completed 200 OK in 326ms (Views: 313.5ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:44 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"christop_cummings@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.8ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "christop_cummings@example.com"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.5ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:56:44.799353"], ["current_sign_in_at", "2015-08-17 19:56:44.799353"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:44.800341"], ["id", 1]]
+  [1m[35m (0.3ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 22ms (ActiveRecord: 1.8ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:44 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.7ms)[0m  SELECT "students".* FROM "students"
+  Rendered collection (0.0ms)
+  Rendered students/index.html.haml within layouts/application (15.2ms)
+  Rendered layouts/_navigation.html.haml (1.3ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 28ms (Views: 23.6ms | ActiveRecord: 1.9ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:44 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered collection (0.0ms)
+  Rendered students/index.html.haml within layouts/application (2.0ms)
+  Rendered layouts/_navigation.html.haml (1.1ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 8ms (Views: 5.2ms | ActiveRecord: 0.9ms)
+Started GET "/students/new" for 127.0.0.1 at 2015-08-17 21:56:44 +0200
+Processing by StudentsController#new as HTML
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mSubjectItem Load (0.6ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (220.1ms)
+  Rendered students/new.html.haml within layouts/application (221.7ms)
+  Rendered layouts/_navigation.html.haml (1.5ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 229ms (Views: 222.6ms | ActiveRecord: 4.6ms)
+Started POST "/students" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by StudentsController#create as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"Adrian", "last_name"=>"Nowacki", "subject_item_ids"=>[""]}, "commit"=>"Create Student"}
+  [1m[36mUser Load (0.7ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.4ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["first_name", "Adrian"], ["last_name", "Nowacki"], ["created_at", "2015-08-17 19:56:45.142682"], ["updated_at", "2015-08-17 19:56:45.142682"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/students/1
+Completed 302 Found in 10ms (ActiveRecord: 2.0ms)
+Started GET "/students/1" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by StudentsController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 1]]
+  Rendered students/show.html.haml within layouts/application (5.0ms)
+  Rendered layouts/_navigation.html.haml (1.2ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 12ms (Views: 9.6ms | ActiveRecord: 0.9ms)
+  [1m[36m (0.4ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'merl_streich@example.org' LIMIT 1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "merl_streich@example.org"], ["encrypted_password", "$2a$04$xm7JPX/qGAzutoA/P77TQuU5/Em8EowRgvu7GDpx/EwcWOZuEINBW"], ["created_at", "2015-08-17 19:56:45.180689"], ["updated_at", "2015-08-17 19:56:45.180689"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.3ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (77.0ms)
+  Rendered layouts/_navigation.html.haml (1.2ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 81ms (Views: 80.3ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"merl_streich@example.org", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "merl_streich@example.org"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.6ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:56:45.276808"], ["current_sign_in_at", "2015-08-17 19:56:45.276808"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:45.277906"], ["id", 2]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 10ms (ActiveRecord: 1.6ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students"
+  Rendered collection (0.0ms)
+  Rendered students/index.html.haml within layouts/application (2.0ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 7ms (Views: 4.5ms | ActiveRecord: 1.0ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered collection (0.0ms)
+  Rendered students/index.html.haml within layouts/application (1.7ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 6ms (Views: 4.1ms | ActiveRecord: 0.8ms)
+Started GET "/students/new" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by StudentsController#new as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mSubjectItem Load (0.5ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (78.1ms)
+  Rendered students/new.html.haml within layouts/application (78.3ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 82ms (Views: 80.3ms | ActiveRecord: 0.8ms)
+Started POST "/students" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by StudentsController#create as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"", "last_name"=>"Nowacki", "subject_item_ids"=>[""]}, "commit"=>"Create Student"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35mSubjectItem Load (0.5ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (143.1ms)
+  Rendered students/new.html.haml within layouts/application (143.4ms)
+  Rendered layouts/_navigation.html.haml (1.3ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 158ms (Views: 146.5ms | ActiveRecord: 1.4ms)
+  [1m[36m (0.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.5ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.5ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'colin@example.net' LIMIT 1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "colin@example.net"], ["encrypted_password", "$2a$04$S/hTRh8Tqh/BplVN4OvcjOMJZbiQwVb5lZWcyXHJWF8ShnrzhKLRe"], ["created_at", "2015-08-17 19:56:45.563755"], ["updated_at", "2015-08-17 19:56:45.563755"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.4ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (111.3ms)
+  Rendered layouts/_navigation.html.haml (1.6ms)
+  Rendered layouts/_messages.html.haml (0.5ms)
+Completed 200 OK in 117ms (Views: 115.9ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"colin@example.net", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "colin@example.net"]]
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.2ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:56:45.696556"], ["current_sign_in_at", "2015-08-17 19:56:45.696556"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:45.697432"], ["id", 3]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 9ms (ActiveRecord: 0.9ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.2ms)[0m  SELECT "students".* FROM "students"
+  Rendered collection (0.0ms)
+  Rendered students/index.html.haml within layouts/application (1.6ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 6ms (Views: 4.5ms | ActiveRecord: 0.5ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT "students".* FROM "students"
+  Rendered collection (0.0ms)
+  Rendered students/index.html.haml within layouts/application (1.7ms)
+  Rendered layouts/_navigation.html.haml (1.1ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 5.1ms | ActiveRecord: 0.6ms)
+Started GET "/students/new" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by StudentsController#new as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mSubjectItem Load (0.6ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (107.3ms)
+  Rendered students/new.html.haml within layouts/application (107.5ms)
+  Rendered layouts/_navigation.html.haml (1.2ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 113ms (Views: 110.0ms | ActiveRecord: 1.0ms)
+Started POST "/students" for 127.0.0.1 at 2015-08-17 21:56:45 +0200
+Processing by StudentsController#create as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"Adrian", "last_name"=>"", "subject_item_ids"=>[""]}, "commit"=>"Create Student"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (112.3ms)
+  Rendered students/new.html.haml within layouts/application (112.5ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 121ms (Views: 114.7ms | ActiveRecord: 1.3ms)
+  [1m[36m (0.3ms)[0m  [1mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36m (226.5ms)[0m  [1mDROP DATABASE IF EXISTS "workshops_test"[0m
+  [1m[35m (532.7ms)[0m  CREATE DATABASE "workshops_test" ENCODING = 'unicode'
+  [1m[36mSQL (0.6ms)[0m  [1mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (53.8ms)[0m  CREATE TABLE "participations" ("id" serial primary key, "student_id" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (37.6ms)[0m  [1mCREATE  INDEX  "index_participations_on_student_id" ON "participations" USING btree ("student_id")[0m
+  [1m[35m (38.8ms)[0m  CREATE  INDEX  "index_participations_on_subject_item_id" ON "participations" USING btree ("subject_item_id")
+  [1m[36m (73.0ms)[0m  [1mCREATE TABLE "students" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (47.8ms)[0m  CREATE TABLE "subject_item_notes" ("id" serial primary key, "value" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "student_id" integer) 
+  [1m[36m (37.6ms)[0m  [1mCREATE  INDEX  "index_subject_item_notes_on_subject_item_id" ON "subject_item_notes" USING btree ("subject_item_id")[0m
+  [1m[35m (46.2ms)[0m  CREATE  INDEX  "index_subject_item_notes_on_student_id" ON "subject_item_notes" USING btree ("student_id")
+  [1m[36m (80.9ms)[0m  [1mCREATE TABLE "subject_items" ("id" serial primary key, "title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "teacher_id" integer) [0m
+  [1m[35m (54.5ms)[0m  CREATE  INDEX  "index_subject_items_on_teacher_id" ON "subject_items" USING btree ("teacher_id")
+  [1m[36m (80.8ms)[0m  [1mCREATE TABLE "teachers" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "academic_title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (80.8ms)[0m  CREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (46.0ms)[0m  [1mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (46.0ms)[0m  CREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")
+  [1m[36m (7.3ms)[0m  [1mALTER TABLE "participations" ADD CONSTRAINT "fk_rails_185ff5bee8"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+[0m
+  [1m[35m (6.9ms)[0m  ALTER TABLE "participations" ADD CONSTRAINT "fk_rails_76267974c1"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+
+  [1m[36m (7.6ms)[0m  [1mALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_058a0d7ccf"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+[0m
+  [1m[35m (7.5ms)[0m  ALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_e00788d7e2"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+
+  [1m[36m (7.3ms)[0m  [1mALTER TABLE "subject_items" ADD CONSTRAINT "fk_rails_f14980cba6"
+FOREIGN KEY ("teacher_id")
+  REFERENCES "teachers" ("id")
+[0m
+  [1m[35m (44.9ms)[0m  CREATE TABLE "schema_migrations" ("version" character varying NOT NULL) 
+  [1m[36m (46.1ms)[0m  [1mCREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")[0m
+  [1m[35m (0.8ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (6.7ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150810192834')[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.6ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (14.4ms)[0m  [1mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "teachers" DISABLE TRIGGER ALL;ALTER TABLE "students" DISABLE TRIGGER ALL;ALTER TABLE "subject_items" DISABLE TRIGGER ALL;ALTER TABLE "participations" DISABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (2.2ms)[0m            SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE 
+            tablename !~ '_prt_' AND 
+            tablename <> 'schema_migrations' AND 
+            schemaname = ANY (current_schemas(false))
+
+  [1m[36m (2.0ms)[0m  [1mselect table_name from information_schema.views where table_schema = 'workshops_test'[0m
+  [1m[35m (538.9ms)[0m  TRUNCATE TABLE "public"."users", "public"."teachers", "public"."students", "public"."subject_items", "public"."participations", "public"."subject_item_notes" RESTART IDENTITY CASCADE;
+  [1m[36m (3.7ms)[0m  [1mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "teachers" ENABLE TRIGGER ALL;ALTER TABLE "students" ENABLE TRIGGER ALL;ALTER TABLE "subject_items" ENABLE TRIGGER ALL;ALTER TABLE "participations" ENABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:56:52.089725"], ["updated_at", "2015-08-17 19:56:52.089725"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.3ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:56:52.114754"], ["updated_at", "2015-08-17 19:56:52.114754"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.7ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'eliseo@example.net' LIMIT 1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "eliseo@example.net"], ["encrypted_password", "$2a$04$ccwoK8fS/j9Ghcee.bCEBuU5IwEdnBqDiUMUEYEInZhEaDaPTDCbK"], ["created_at", "2015-08-17 19:56:52.405492"], ["updated_at", "2015-08-17 19:56:52.405492"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:52 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (1.4ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (107.3ms)
+  Rendered layouts/_navigation.html.haml (4.4ms)
+  Rendered layouts/_messages.html.haml (1.2ms)
+Completed 200 OK in 317ms (Views: 306.0ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:52 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"eliseo@example.net", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.7ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "eliseo@example.net"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.4ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:56:52.758138"], ["current_sign_in_at", "2015-08-17 19:56:52.758138"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:52.759154"], ["id", 1]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 16ms (ActiveRecord: 1.5ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:52 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.6ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (3.4ms)
+  Rendered students/index.html.haml within layouts/application (7.7ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 17ms (Views: 13.8ms | ActiveRecord: 1.0ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:52 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.0ms)
+  Rendered students/index.html.haml within layouts/application (2.7ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 4.8ms | ActiveRecord: 0.9ms)
+Started DELETE "/students/1" for 127.0.0.1 at 2015-08-17 21:56:52 +0200
+Processing by StudentsController#destroy as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mParticipation Load (0.6ms)[0m  SELECT "participations".* FROM "participations" WHERE "participations"."student_id" = $1  [["student_id", 1]]
+  [1m[36mSubjectItemNote Load (0.6ms)[0m  [1mSELECT "subject_item_notes".* FROM "subject_item_notes" WHERE "subject_item_notes"."student_id" = $1[0m  [["student_id", 1]]
+  [1m[35mSQL (1.2ms)[0m  DELETE FROM "students" WHERE "students"."id" = $1  [["id", 1]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/students
+Completed 302 Found in 28ms (ActiveRecord: 6.4ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:52 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mStudent Load (0.3ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered collection (0.0ms)
+  Rendered students/index.html.haml within layouts/application (1.6ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 6ms (Views: 3.9ms | ActiveRecord: 0.8ms)
+  [1m[35m (0.4ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:56:52.853009"], ["updated_at", "2015-08-17 19:56:52.853009"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["title", "Math"], ["created_at", "2015-08-17 19:56:52.855153"], ["updated_at", "2015-08-17 19:56:52.855153"]]
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mUser Exists (0.5ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."email" = 'barney.hackett@example.org' LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["email", "barney.hackett@example.org"], ["encrypted_password", "$2a$04$2rtKD0y57f8WkWfGkMMr1O8sH/ERrcgwV27vdUUOmQfV9VLZ6h6Nu"], ["created_at", "2015-08-17 19:56:52.860859"], ["updated_at", "2015-08-17 19:56:52.860859"]]
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:52 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.4ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (105.7ms)
+  Rendered layouts/_navigation.html.haml (1.4ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 110ms (Views: 109.2ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:52 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"barney.hackett@example.org", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[35mUser Load (0.6ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["email", "barney.hackett@example.org"]]
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.5ms)[0m  UPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7  [["last_sign_in_at", "2015-08-17 19:56:52.983211"], ["current_sign_in_at", "2015-08-17 19:56:52.983211"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:56:52.984062"], ["id", 2]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 8ms (ActiveRecord: 1.5ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:56:52 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 2]]
+  [1m[36mStudent Load (0.5ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.7ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 4.8ms | ActiveRecord: 1.0ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:53 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.6ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 2]]
+  [1m[36mStudent Load (0.5ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered students/_student.haml (1.0ms)
+  Rendered students/index.html.haml within layouts/application (3.0ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 8ms (Views: 5.4ms | ActiveRecord: 1.0ms)
+  [1m[35m (0.3ms)[0m  SAVEPOINT active_record_1
+  [1m[36mParticipation Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "participations" WHERE ("participations"."student_id" = 2 AND "participations"."subject_item_id" = 2) LIMIT 1[0m
+  [1m[35mSQL (1.4ms)[0m  INSERT INTO "participations" ("student_id", "subject_item_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["student_id", 2], ["subject_item_id", 2], ["created_at", "2015-08-17 19:56:53.025231"], ["updated_at", "2015-08-17 19:56:53.025231"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.3ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (1.0ms)[0m  [1mINSERT INTO "subject_item_notes" ("value", "student_id", "subject_item_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["value", 1], ["student_id", 2], ["subject_item_id", 2], ["created_at", "2015-08-17 19:56:53.040237"], ["updated_at", "2015-08-17 19:56:53.040237"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Started DELETE "/students/2" for 127.0.0.1 at 2015-08-17 21:56:53 +0200
+Processing by StudentsController#destroy as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 2]]
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mParticipation Load (0.3ms)[0m  SELECT "participations".* FROM "participations" WHERE "participations"."student_id" = $1  [["student_id", 2]]
+  [1m[36mSQL (0.3ms)[0m  [1mDELETE FROM "participations" WHERE "participations"."id" = $1[0m  [["id", 1]]
+  [1m[35mSubjectItemNote Load (0.3ms)[0m  SELECT "subject_item_notes".* FROM "subject_item_notes" WHERE "subject_item_notes"."student_id" = $1  [["student_id", 2]]
+  [1m[36mSQL (0.2ms)[0m  [1mDELETE FROM "subject_item_notes" WHERE "subject_item_notes"."id" = $1[0m  [["id", 1]]
+  [1m[35mSQL (0.5ms)[0m  DELETE FROM "students" WHERE "students"."id" = $1  [["id", 2]]
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/students
+Completed 302 Found in 10ms (ActiveRecord: 2.6ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:56:53 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 2]]
+  [1m[36mStudent Load (0.9ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered collection (0.0ms)
+  Rendered students/index.html.haml within layouts/application (2.8ms)
+  Rendered layouts/_navigation.html.haml (1.4ms)
+  Rendered layouts/_messages.html.haml (0.5ms)
+Completed 200 OK in 9ms (Views: 6.5ms | ActiveRecord: 1.1ms)
+  [1m[35m (0.3ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36m (322.5ms)[0m  [1mDROP DATABASE IF EXISTS "workshops_test"[0m
+  [1m[35m (524.6ms)[0m  CREATE DATABASE "workshops_test" ENCODING = 'unicode'
+  [1m[36mSQL (0.5ms)[0m  [1mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (47.3ms)[0m  CREATE TABLE "participations" ("id" serial primary key, "student_id" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (37.7ms)[0m  [1mCREATE  INDEX  "index_participations_on_student_id" ON "participations" USING btree ("student_id")[0m
+  [1m[35m (45.5ms)[0m  CREATE  INDEX  "index_participations_on_subject_item_id" ON "participations" USING btree ("subject_item_id")
+  [1m[36m (83.3ms)[0m  [1mCREATE TABLE "students" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (48.1ms)[0m  CREATE TABLE "subject_item_notes" ("id" serial primary key, "value" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "student_id" integer) 
+  [1m[36m (45.8ms)[0m  [1mCREATE  INDEX  "index_subject_item_notes_on_subject_item_id" ON "subject_item_notes" USING btree ("subject_item_id")[0m
+  [1m[35m (46.3ms)[0m  CREATE  INDEX  "index_subject_item_notes_on_student_id" ON "subject_item_notes" USING btree ("student_id")
+  [1m[36m (89.7ms)[0m  [1mCREATE TABLE "subject_items" ("id" serial primary key, "title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "teacher_id" integer) [0m
+  [1m[35m (54.4ms)[0m  CREATE  INDEX  "index_subject_items_on_teacher_id" ON "subject_items" USING btree ("teacher_id")
+  [1m[36m (81.2ms)[0m  [1mCREATE TABLE "teachers" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "academic_title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (92.1ms)[0m  CREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (54.3ms)[0m  [1mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (46.4ms)[0m  CREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")
+  [1m[36m (7.4ms)[0m  [1mALTER TABLE "participations" ADD CONSTRAINT "fk_rails_185ff5bee8"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+[0m
+  [1m[35m (7.4ms)[0m  ALTER TABLE "participations" ADD CONSTRAINT "fk_rails_76267974c1"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+
+  [1m[36m (7.6ms)[0m  [1mALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_058a0d7ccf"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+[0m
+  [1m[35m (7.7ms)[0m  ALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_e00788d7e2"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+
+  [1m[36m (7.7ms)[0m  [1mALTER TABLE "subject_items" ADD CONSTRAINT "fk_rails_f14980cba6"
+FOREIGN KEY ("teacher_id")
+  REFERENCES "teachers" ("id")
+[0m
+  [1m[35m (53.4ms)[0m  CREATE TABLE "schema_migrations" ("version" character varying NOT NULL) 
+  [1m[36m (46.2ms)[0m  [1mCREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")[0m
+  [1m[35m (0.8ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (6.5ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150810192834')[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.6ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (9.7ms)[0m  [1mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "teachers" DISABLE TRIGGER ALL;ALTER TABLE "students" DISABLE TRIGGER ALL;ALTER TABLE "subject_items" DISABLE TRIGGER ALL;ALTER TABLE "participations" DISABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (2.0ms)[0m            SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE 
+            tablename !~ '_prt_' AND 
+            tablename <> 'schema_migrations' AND 
+            schemaname = ANY (current_schemas(false))
+
+  [1m[36m (1.8ms)[0m  [1mselect table_name from information_schema.views where table_schema = 'workshops_test'[0m
+  [1m[35m (648.1ms)[0m  TRUNCATE TABLE "public"."users", "public"."teachers", "public"."students", "public"."subject_items", "public"."participations", "public"."subject_item_notes" RESTART IDENTITY CASCADE;
+  [1m[36m (4.2ms)[0m  [1mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "teachers" ENABLE TRIGGER ALL;ALTER TABLE "students" ENABLE TRIGGER ALL;ALTER TABLE "subject_items" ENABLE TRIGGER ALL;ALTER TABLE "participations" ENABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:56:59.395765"], ["updated_at", "2015-08-17 19:56:59.395765"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:56:59.418487"], ["updated_at", "2015-08-17 19:56:59.418487"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.5ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'zita@example.net' LIMIT 1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "zita@example.net"], ["encrypted_password", "$2a$04$KGoPsPwhuUpI35l/9PTjW.2jLViXOlDIc5ufaS9eyBTbyhnHhqoPG"], ["created_at", "2015-08-17 19:56:59.702806"], ["updated_at", "2015-08-17 19:56:59.702806"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:56:59 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (1.4ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (109.7ms)
+  Rendered layouts/_navigation.html.haml (4.1ms)
+  Rendered layouts/_messages.html.haml (1.1ms)
+Completed 200 OK in 315ms (Views: 303.9ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"zita@example.net", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "zita@example.net"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.5ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:57:00.051762"], ["current_sign_in_at", "2015-08-17 19:57:00.051762"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:57:00.052817"], ["id", 1]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 16ms (ActiveRecord: 1.5ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (2.7ms)
+  Rendered students/index.html.haml within layouts/application (6.6ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 15ms (Views: 12.4ms | ActiveRecord: 0.7ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.2ms)
+  Rendered students/index.html.haml within layouts/application (4.4ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 9ms (Views: 6.7ms | ActiveRecord: 0.7ms)
+Started GET "/students/1/edit" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mSubjectItem Load (0.6ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 1]]
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (156.1ms)
+  Rendered students/edit.html.haml within layouts/application (159.6ms)
+  Rendered layouts/_navigation.html.haml (1.6ms)
+  Rendered layouts/_messages.html.haml (0.6ms)
+Completed 200 OK in 167ms (Views: 162.8ms | ActiveRecord: 2.6ms)
+  [1m[36m (0.8ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:57:00.279834"], ["updated_at", "2015-08-17 19:57:00.279834"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:57:00.283078"], ["updated_at", "2015-08-17 19:57:00.283078"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.4ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'cristian.rolfson@example.net' LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "cristian.rolfson@example.net"], ["encrypted_password", "$2a$04$Wbzi55JRRcIU9O6kYV0jM.OmOBQFDP/PnYon8LpD73.dNLEMDTxmq"], ["created_at", "2015-08-17 19:57:00.291841"], ["updated_at", "2015-08-17 19:57:00.291841"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.2ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (131.3ms)
+  Rendered layouts/_navigation.html.haml (1.2ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 136ms (Views: 134.7ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"cristian.rolfson@example.net", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "cristian.rolfson@example.net"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.4ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:57:00.441747"], ["current_sign_in_at", "2015-08-17 19:57:00.441747"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:57:00.442806"], ["id", 2]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 18ms (ActiveRecord: 1.4ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (0.8ms)
+  Rendered students/index.html.haml within layouts/application (2.6ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 4.6ms | ActiveRecord: 0.8ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.7ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 4.5ms | ActiveRecord: 1.0ms)
+Started GET "/students/2/edit" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 2]]
+  [1m[36mSubjectItem Load (0.7ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 2]]
+  [1m[35mSubjectItem Load (0.3ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (82.8ms)
+  Rendered students/edit.html.haml within layouts/application (84.7ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 89ms (Views: 85.7ms | ActiveRecord: 2.0ms)
+Started PATCH "/students/2" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#update as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"Marcin", "last_name"=>"Abacki", "subject_item_ids"=>[""]}, "commit"=>"Update Student", "id"=>"2"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.2ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 2]]
+  [1m[36mSubjectItem Load (0.3ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 2]]
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.3ms)[0m  [1mUPDATE "students" SET "first_name" = $1, "updated_at" = $2 WHERE "students"."id" = $3[0m  [["first_name", "Marcin"], ["updated_at", "2015-08-17 19:57:00.575753"], ["id", 2]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/students/2
+Completed 302 Found in 7ms (ActiveRecord: 1.4ms)
+Started GET "/students/2" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 2]]
+  Rendered students/show.html.haml within layouts/application (4.5ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 10ms (Views: 8.1ms | ActiveRecord: 0.7ms)
+  [1m[36m (0.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:57:00.599714"], ["updated_at", "2015-08-17 19:57:00.599714"]]
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:57:00.602280"], ["updated_at", "2015-08-17 19:57:00.602280"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'reilly@example.net' LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "reilly@example.net"], ["encrypted_password", "$2a$04$4hI1y6Z.O/pSJpeSEADkge1LC5onUJVtJuegT4KIlSt4n.s7vd8cy"], ["created_at", "2015-08-17 19:57:00.607869"], ["updated_at", "2015-08-17 19:57:00.607869"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.2ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (79.8ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 83ms (Views: 82.2ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"reilly@example.net", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "reilly@example.net"]]
+  [1m[35m (0.3ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.6ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:57:00.702114"], ["current_sign_in_at", "2015-08-17 19:57:00.702114"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:57:00.703515"], ["id", 3]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 9ms (ActiveRecord: 1.7ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.5ms)
+  Rendered layouts/_navigation.html.haml (0.6ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 6ms (Views: 4.6ms | ActiveRecord: 0.6ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.7ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 4.9ms | ActiveRecord: 0.6ms)
+Started GET "/students/3/edit" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"3"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.2ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 3]]
+  [1m[36mSubjectItem Load (0.4ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 3]]
+  [1m[35mSubjectItem Load (0.2ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (96.4ms)
+  Rendered students/edit.html.haml within layouts/application (98.2ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 102ms (Views: 100.0ms | ActiveRecord: 1.1ms)
+Started PATCH "/students/3" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by StudentsController#update as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"", "last_name"=>"Abacki", "subject_item_ids"=>[""]}, "commit"=>"Update Student", "id"=>"3"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mStudent Load (0.2ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 3]]
+  [1m[36mSubjectItem Load (0.3ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 3]]
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35mSubjectItem Load (0.3ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (88.1ms)
+  Rendered students/edit.html.haml within layouts/application (88.4ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 97ms (Views: 91.2ms | ActiveRecord: 1.2ms)
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Abacki"], ["created_at", "2015-08-17 19:57:00.948709"], ["updated_at", "2015-08-17 19:57:00.948709"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "subject_items" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Math"], ["created_at", "2015-08-17 19:57:00.951493"], ["updated_at", "2015-08-17 19:57:00.951493"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'emerson@example.net' LIMIT 1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "emerson@example.net"], ["encrypted_password", "$2a$04$ZuFOunv9LtSYaoorHK6NJOxTFQygDnFABiieHgieAeb1U6QlNRkDK"], ["created_at", "2015-08-17 19:57:00.957196"], ["updated_at", "2015-08-17 19:57:00.957196"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:00 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.3ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (110.4ms)
+  Rendered layouts/_navigation.html.haml (1.1ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 115ms (Views: 114.0ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:01 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"emerson@example.net", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "emerson@example.net"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.4ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:57:01.086384"], ["current_sign_in_at", "2015-08-17 19:57:01.086384"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:57:01.087207"], ["id", 4]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 9ms (ActiveRecord: 1.2ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:57:01 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.9ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 8ms (Views: 5.5ms | ActiveRecord: 0.7ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:57:01 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (0.9ms)
+  Rendered students/index.html.haml within layouts/application (2.6ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 4.8ms | ActiveRecord: 0.6ms)
+Started GET "/students/4/edit" for 127.0.0.1 at 2015-08-17 21:57:01 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"4"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1  [["id", 4]]
+  [1m[36mSubjectItem Load (0.8ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 4]]
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  Rendered students/_form.html.haml (94.2ms)
+  Rendered students/edit.html.haml within layouts/application (95.9ms)
+  Rendered layouts/_navigation.html.haml (0.6ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 100ms (Views: 96.8ms | ActiveRecord: 1.8ms)
+Started GET "/reports" for 127.0.0.1 at 2015-08-17 21:57:01 +0200
+Processing by ReportsController#subjects as HTML
+  [1m[36mSubjectItem Load (0.5ms)[0m  [1mSELECT "subject_items".* FROM "subject_items"[0m
+  [1m[35mParticipation Load (0.6ms)[0m  SELECT "participations".* FROM "participations" WHERE "participations"."subject_item_id" IN (4)
+  Rendered reports/subjects.html.haml within layouts/application (20.2ms)
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  Rendered layouts/_navigation.html.haml (2.1ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 26ms (Views: 21.5ms | ActiveRecord: 3.5ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:57:01 +0200
+Processing by StudentsController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.9ms)[0m  [1mSELECT "students".* FROM "students"[0m
+  Rendered students/_student.haml (1.0ms)
+  Rendered students/index.html.haml within layouts/application (3.8ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 8ms (Views: 5.5ms | ActiveRecord: 1.3ms)
+Started GET "/students/4/edit" for 127.0.0.1 at 2015-08-17 21:57:01 +0200
+Processing by StudentsController#edit as HTML
+  Parameters: {"id"=>"4"}
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.3ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 4]]
+  [1m[35mSubjectItem Load (0.3ms)[0m  SELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1  [["student_id", 4]]
+  [1m[36mSubjectItem Load (0.2ms)[0m  [1mSELECT "subject_items".* FROM "subject_items"[0m
+  Rendered students/_form.html.haml (96.5ms)
+  Rendered students/edit.html.haml within layouts/application (98.3ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 103ms (Views: 100.3ms | ActiveRecord: 1.4ms)
+Started PATCH "/students/4" for 127.0.0.1 at 2015-08-17 21:57:01 +0200
+Processing by StudentsController#update as HTML
+  Parameters: {"utf8"=>"✓", "student"=>{"first_name"=>"Jan", "last_name"=>"Abacki", "subject_item_ids"=>["4", ""]}, "commit"=>"Update Student", "id"=>"4"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.2ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 4]]
+  [1m[35mSubjectItem Load (0.4ms)[0m  SELECT  "subject_items".* FROM "subject_items" WHERE "subject_items"."id" = $1 LIMIT 1  [["id", 4]]
+  [1m[36mSubjectItem Load (0.2ms)[0m  [1mSELECT "subject_items".* FROM "subject_items" INNER JOIN "participations" ON "subject_items"."id" = "participations"."subject_item_id" WHERE "participations"."student_id" = $1[0m  [["student_id", 4]]
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mParticipation Exists (0.7ms)[0m  [1mSELECT  1 AS one FROM "participations" WHERE ("participations"."student_id" = 4 AND "participations"."subject_item_id" = 4) LIMIT 1[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "participations" ("student_id", "subject_item_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["student_id", 4], ["subject_item_id", 4], ["created_at", "2015-08-17 19:57:01.386692"], ["updated_at", "2015-08-17 19:57:01.386692"]]
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/students/4
+Completed 302 Found in 16ms (ActiveRecord: 3.5ms)
+Started GET "/students/4" for 127.0.0.1 at 2015-08-17 21:57:01 +0200
+Processing by StudentsController#show as HTML
+  Parameters: {"id"=>"4"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1  [["id", 4]]
+  [1m[36mStudent Load (0.3ms)[0m  [1mSELECT  "students".* FROM "students" WHERE "students"."id" = $1 LIMIT 1[0m  [["id", 4]]
+  Rendered students/show.html.haml within layouts/application (2.0ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 6ms (Views: 4.4ms | ActiveRecord: 0.6ms)
+Started GET "/reports" for 127.0.0.1 at 2015-08-17 21:57:01 +0200
+Processing by ReportsController#subjects as HTML
+  [1m[35mSubjectItem Load (0.3ms)[0m  SELECT "subject_items".* FROM "subject_items"
+  [1m[36mParticipation Load (0.3ms)[0m  [1mSELECT "participations".* FROM "participations" WHERE "participations"."subject_item_id" IN (4)[0m
+  [1m[35mStudent Load (0.3ms)[0m  SELECT "students".* FROM "students" WHERE "students"."id" IN (4)
+  Rendered reports/subjects.html.haml within layouts/application (8.3ms)
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 4]]
+  Rendered layouts/_navigation.html.haml (2.1ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 13ms (Views: 11.3ms | ActiveRecord: 1.2ms)
+  [1m[35m (0.2ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36m (221.5ms)[0m  [1mDROP DATABASE IF EXISTS "workshops_test"[0m
+  [1m[35m (541.4ms)[0m  CREATE DATABASE "workshops_test" ENCODING = 'unicode'
+  [1m[36mSQL (0.5ms)[0m  [1mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (55.9ms)[0m  CREATE TABLE "participations" ("id" serial primary key, "student_id" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (45.2ms)[0m  [1mCREATE  INDEX  "index_participations_on_student_id" ON "participations" USING btree ("student_id")[0m
+  [1m[35m (38.1ms)[0m  CREATE  INDEX  "index_participations_on_subject_item_id" ON "participations" USING btree ("subject_item_id")
+  [1m[36m (81.7ms)[0m  [1mCREATE TABLE "students" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (48.0ms)[0m  CREATE TABLE "subject_item_notes" ("id" serial primary key, "value" integer, "subject_item_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "student_id" integer) 
+  [1m[36m (46.6ms)[0m  [1mCREATE  INDEX  "index_subject_item_notes_on_subject_item_id" ON "subject_item_notes" USING btree ("subject_item_id")[0m
+  [1m[35m (46.0ms)[0m  CREATE  INDEX  "index_subject_item_notes_on_student_id" ON "subject_item_notes" USING btree ("student_id")
+  [1m[36m (81.8ms)[0m  [1mCREATE TABLE "subject_items" ("id" serial primary key, "title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "teacher_id" integer) [0m
+  [1m[35m (54.9ms)[0m  CREATE  INDEX  "index_subject_items_on_teacher_id" ON "subject_items" USING btree ("teacher_id")
+  [1m[36m (73.0ms)[0m  [1mCREATE TABLE "teachers" ("id" serial primary key, "first_name" character varying, "last_name" character varying, "academic_title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (67.4ms)[0m  CREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (39.8ms)[0m  [1mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (46.4ms)[0m  CREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")
+  [1m[36m (7.1ms)[0m  [1mALTER TABLE "participations" ADD CONSTRAINT "fk_rails_185ff5bee8"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+[0m
+  [1m[35m (7.5ms)[0m  ALTER TABLE "participations" ADD CONSTRAINT "fk_rails_76267974c1"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+
+  [1m[36m (7.6ms)[0m  [1mALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_058a0d7ccf"
+FOREIGN KEY ("subject_item_id")
+  REFERENCES "subject_items" ("id")
+[0m
+  [1m[35m (7.6ms)[0m  ALTER TABLE "subject_item_notes" ADD CONSTRAINT "fk_rails_e00788d7e2"
+FOREIGN KEY ("student_id")
+  REFERENCES "students" ("id")
+
+  [1m[36m (7.4ms)[0m  [1mALTER TABLE "subject_items" ADD CONSTRAINT "fk_rails_f14980cba6"
+FOREIGN KEY ("teacher_id")
+  REFERENCES "teachers" ("id")
+[0m
+  [1m[35m (45.6ms)[0m  CREATE TABLE "schema_migrations" ("version" character varying NOT NULL) 
+  [1m[36m (46.1ms)[0m  [1mCREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")[0m
+  [1m[35m (0.7ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (6.7ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150810192834')[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.6ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (28.9ms)[0m  [1mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "teachers" DISABLE TRIGGER ALL;ALTER TABLE "students" DISABLE TRIGGER ALL;ALTER TABLE "subject_items" DISABLE TRIGGER ALL;ALTER TABLE "participations" DISABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (2.0ms)[0m            SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE 
+            tablename !~ '_prt_' AND 
+            tablename <> 'schema_migrations' AND 
+            schemaname = ANY (current_schemas(false))
+
+  [1m[36m (1.7ms)[0m  [1mselect table_name from information_schema.views where table_schema = 'workshops_test'[0m
+  [1m[35m (573.2ms)[0m  TRUNCATE TABLE "public"."users", "public"."teachers", "public"."students", "public"."subject_items", "public"."participations", "public"."subject_item_notes" RESTART IDENTITY CASCADE;
+  [1m[36m (3.6ms)[0m  [1mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "teachers" ENABLE TRIGGER ALL;ALTER TABLE "students" ENABLE TRIGGER ALL;ALTER TABLE "subject_items" ENABLE TRIGGER ALL;ALTER TABLE "participations" ENABLE TRIGGER ALL;ALTER TABLE "subject_item_notes" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Pfannerstill"], ["created_at", "2015-08-17 19:57:08.292155"], ["updated_at", "2015-08-17 19:57:08.292155"]]
+  [1m[36m (0.3ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["first_name", "Adam"], ["last_name", "Lang"], ["created_at", "2015-08-17 19:57:08.298693"], ["updated_at", "2015-08-17 19:57:08.298693"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'otilia@example.org' LIMIT 1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "otilia@example.org"], ["encrypted_password", "$2a$04$bEh4nmvwRXRkMS3z/E5twetsEaQ1cHhegffuiItgO8KbZ3Bg9OM2."], ["created_at", "2015-08-17 19:57:08.323035"], ["updated_at", "2015-08-17 19:57:08.323035"]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (1.4ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (178.9ms)
+  Rendered layouts/_navigation.html.haml (4.7ms)
+  Rendered layouts/_messages.html.haml (1.2ms)
+Completed 200 OK in 375ms (Views: 362.5ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"otilia@example.org", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "otilia@example.org"]]
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.2ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:57:08.734162"], ["current_sign_in_at", "2015-08-17 19:57:08.734162"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:57:08.735000"], ["id", 1]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 15ms (ActiveRecord: 0.8ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.3ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (3.4ms)
+  Rendered students/index.html.haml within layouts/application (7.1ms)
+  Rendered layouts/_navigation.html.haml (0.7ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 15ms (Views: 13.1ms | ActiveRecord: 0.5ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mStudent Load (0.2ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.6ms)
+  Rendered students/index.html.haml within layouts/application (3.3ms)
+  Rendered layouts/_navigation.html.haml (0.6ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 7ms (Views: 5.4ms | ActiveRecord: 0.6ms)
+  [1m[36m (0.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["first_name", "Jan"], ["last_name", "Marvin"], ["created_at", "2015-08-17 19:57:08.788562"], ["updated_at", "2015-08-17 19:57:08.788562"]]
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "students" ("first_name", "last_name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["first_name", "Adam"], ["last_name", "Bins"], ["created_at", "2015-08-17 19:57:08.790908"], ["updated_at", "2015-08-17 19:57:08.790908"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.5ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'eloise.okeefe@example.com' LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "eloise.okeefe@example.com"], ["encrypted_password", "$2a$04$dJi23RvdEizVXAigyHUlP.1VNzRbBvdeEGFUR9c2U1gggyPZeSCfm"], ["created_at", "2015-08-17 19:57:08.796440"], ["updated_at", "2015-08-17 19:57:08.796440"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.3ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (95.7ms)
+  Rendered layouts/_navigation.html.haml (1.2ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 100ms (Views: 98.7ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"eloise.okeefe@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.7ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "eloise.okeefe@example.com"]]
+  [1m[35m (0.2ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.5ms)[0m  [1mUPDATE "users" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["last_sign_in_at", "2015-08-17 19:57:08.908500"], ["current_sign_in_at", "2015-08-17 19:57:08.908500"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2015-08-17 19:57:08.909336"], ["id", 2]]
+  [1m[35m (0.2ms)[0m  RELEASE SAVEPOINT active_record_1
+Redirected to http://www.example.com/
+Completed 302 Found in 9ms (ActiveRecord: 1.5ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.5ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.7ms)
+  Rendered students/index.html.haml within layouts/application (3.6ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.2ms)
+Completed 200 OK in 8ms (Views: 5.9ms | ActiveRecord: 1.0ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by StudentsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35mStudent Load (0.4ms)[0m  SELECT "students".* FROM "students"
+  Rendered students/_student.haml (1.8ms)
+  Rendered students/index.html.haml within layouts/application (3.7ms)
+  Rendered layouts/_navigation.html.haml (0.8ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 8ms (Views: 6.0ms | ActiveRecord: 1.0ms)
+Started DELETE "/users/sign_out" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by Devise::SessionsController#destroy as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 2]]
+  [1m[35m (0.3ms)[0m  SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 16ms (ActiveRecord: 1.0ms)
+Started GET "/" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by StudentsController#index as HTML
+Completed 401 Unauthorized in 1ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:08 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.5ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (121.8ms)
+  Rendered layouts/_navigation.html.haml (1.2ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 126ms (Views: 125.2ms | ActiveRecord: 0.0ms)
+Started GET "/students" for 127.0.0.1 at 2015-08-17 21:57:09 +0200
+Processing by StudentsController#index as HTML
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2015-08-17 21:57:09 +0200
+Processing by Devise::SessionsController#new as HTML
+  Rendered /home/marcin/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/devise-3.5.1/app/views/devise/shared/_links.html.erb (0.3ms)
+  Rendered devise/sessions/new.html.haml within layouts/application (91.2ms)
+  Rendered layouts/_navigation.html.haml (0.9ms)
+  Rendered layouts/_messages.html.haml (0.1ms)
+Completed 200 OK in 95ms (Views: 93.9ms | ActiveRecord: 0.0ms)
+  [1m[35m (0.3ms)[0m  ROLLBACK

@@ -33,7 +33,6 @@ feature 'User edits student' do
   scenario 'by assigning subject item' do
     visit report_subjects_path
     expect(page).to have_no_content 'Jan Abacki'
-
     visit students_path
     find(:xpath, "//a[@title='edit']").click
     find("input[type='checkbox']").set(true)

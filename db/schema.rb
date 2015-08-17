@@ -49,11 +49,9 @@ ActiveRecord::Schema.define(version: 20150810192834) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "teacher_id"
-    t.integer  "student_id"
   end
 
   add_index "subject_items", ["teacher_id"], name: "index_subject_items_on_teacher_id", using: :btree
-  add_index "subject_items", ["student_id"], name: "index_subject_items_on_student_id", using: :btree
 
   create_table "teachers", force: :cascade do |t|
     t.string   "first_name"
@@ -86,5 +84,4 @@ ActiveRecord::Schema.define(version: 20150810192834) do
   add_foreign_key "subject_item_notes", "subject_items"
   add_foreign_key "subject_item_notes", "students"
   add_foreign_key "subject_items", "teachers"
-  add_foreign_key "subject_items", "students"
 end
