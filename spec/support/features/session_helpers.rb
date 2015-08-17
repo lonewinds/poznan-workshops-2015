@@ -5,7 +5,7 @@ module Features
       fill_in 'Email', with: email
       fill_in 'user_password', with: password
       fill_in 'Password confirmation', with: password
-      within(".form-actions") do
+      within(".actions") do
         click_on 'Sign up'
       end
     end
