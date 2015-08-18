@@ -1,4 +1,4 @@
-module Features2
+module Features
   module SessionHelpers
     def sign_up_with(email, password)
       visit new_user_registration_path

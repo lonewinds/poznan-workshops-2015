@@ -1,3 +1,5 @@
+require 'spec/support/features/session_helpers'
+
 RSpec.configure do |config|
-  config.include Features2::SessionHelpers, type: :feature
+  config.include Features::SessionHelpers, type: :feature
 end
