@@ -24,8 +24,8 @@ group :development do
   gem 'better_errors'
   gem 'html2haml'
   gem 'hub', require: nil
-  gem 'rails_layout'
   gem 'spring-commands-rspec'
+  gem 'rails_layout'
   gem 'quiet_assets'
 end
 
@@ -43,6 +43,7 @@ group :production do
 end
 
 group :test do
+  gem 'rake'
   gem 'capybara'
   gem 'database_cleaner'
   gem 'launchy'
