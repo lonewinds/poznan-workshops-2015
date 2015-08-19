@@ -41,4 +41,22 @@ feature 'User edits student' do
     visit report_subjects_path
     expect(page).to have_content 'Jan Abacki'
   end
+
+  scenario 'by set birthday' do
+    visit students_path
+    find(:xpath, "//a[@title='edit']").click
+    find("input[type='checkbox']").set(true)
+    click_button 'Update Student'
+
+    visit report_subjects_path
+    expect(page).to have_no_content '1989-02_22'
+
+    visit students_path
+    find(:xpath, "//a[@title='edit']").click
+    fill_in 'Birthday', with: '22-02-1989'
+    click_button 'Update Student'
+
+    visit report_subjects_path
+    expect(page).to have_content '1989-02_22'
+  end
 end

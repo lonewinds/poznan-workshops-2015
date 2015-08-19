@@ -3,8 +3,4 @@
   list of subjects:
   - subject_items.each do |subject_item|
     .subject-item
-      = "#{subject_item.title}"
-      - if !subject_item.teacher.nil?
-        = " (#{subject_item.teacher.decorate.full_name})"
-      - subject_item.students.each do |student|
-        = student.decorate.full_name
+      = render 'reports/subject_item', subject_item: subject_item

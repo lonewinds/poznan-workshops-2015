@@ -11,4 +11,8 @@ class StudentDecorator < BaseDecorator
 
     avg = notes.size == 0 ? sprintf('%.2f', 0) : sprintf('%.2f', notes.inject{ |sum, el| sum + el }.to_f / notes.size)
   end
+
+  def birthday_formatted
+    birthday.strftime('%Y-%m_%d') if birthday
+  end
 end
