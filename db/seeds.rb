@@ -11,18 +11,32 @@ User.create!(email: 'admin@admin.com',password: 'adminadmin')
 end
 
 teachers = Teacher.all
-5.times do
-  SubjectItem.create!(
-    title: Faker::Lorem.sentence,
+SubjectItem.create!(
+    title: 'Math',
     teacher: teachers.sample
-  )
-end
+)
+SubjectItem.create!(
+    title: 'Physics',
+    teacher: teachers.sample
+)
+SubjectItem.create!(
+    title: 'Latin',
+    teacher: teachers.sample
+)
+SubjectItem.create!(
+    title: 'Chemistry',
+    teacher: teachers.sample
+)
+SubjectItem.create!(
+    title: 'IT',
+    teacher: teachers.sample
+)
 
 25.times do
   Student.create!(
     first_name: Faker::Name.first_name,
     last_name: Faker::Name.last_name,
-    birthday: Faker::Date.birthday
+    birthday: Faker::Date.between(Date.new(1997, 01, 01).to_s, Date.new(2005, 12, 31).to_s),
   )
   student = Student.last!
   Payment.create!(
