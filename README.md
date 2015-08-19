@@ -1,3 +1,8 @@
+
+TravisCI badge
+================
+[![Build Status](https://travis-ci.org/marcinjak/poznan-workshops-2015.svg)](https://travis-ci.org/marcinjak/poznan-workshops-2015)
+
 RoR Workshops
 ================
 
