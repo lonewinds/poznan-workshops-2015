@@ -15,6 +15,7 @@ RSpec.describe Student do
     it { is_expected.to have_many :subject_items }
     it { is_expected.to have_many :subject_item_notes }
     it { is_expected.to have_many :participations }
+    it { is_expected.to have_one :payment }
   end
 
   describe 'nested attributes' do

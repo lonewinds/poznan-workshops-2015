@@ -80,9 +80,28 @@ ActiveRecord::Schema.define(version: 20150810192834) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  create_table "payments", force: :cascade do |t|
+    t.date  "january",    null: true
+    t.date  "february",   null: true
+    t.date  "march",      null: true
+    t.date  "april",      null: true
+    t.date  "may",        null: true
+    t.date  "june",       null: true
+    t.date  "july",       null: true
+    t.date  "august",     null: true
+    t.date  "september",  null: true
+    t.date  "october",    null: true
+    t.date  "november",   null: true
+    t.date  "december",   null: true
+    t.integer "student_id"
+  end
+
+  add_index "payments", ["student_id"], name: "index_subject_items_on_student_id", using: :btree
+
   add_foreign_key "participations", "students"
   add_foreign_key "participations", "subject_items"
   add_foreign_key "subject_item_notes", "subject_items"
   add_foreign_key "subject_item_notes", "students"
   add_foreign_key "subject_items", "teachers"
+  add_foreign_key "payments", "students"
 end

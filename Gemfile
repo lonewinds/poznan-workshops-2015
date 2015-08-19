@@ -19,6 +19,8 @@ gem 'uglifier', '>= 1.3.0'
 gem 'dotenv-rails'
 gem 'gretel'
 gem 'devise'
+gem 'jquery-datatables-rails', '~> 3.3.0'
+gem 'jquery-turbolinks'
 
 group :development do
   gem 'better_errors'

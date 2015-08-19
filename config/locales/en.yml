@@ -7,6 +7,7 @@ en:
     logout: Logout
     signin: Sign in
     signup: Sign up
+    payments: Payments
   shared:
     created: "%{resource} has been created!"
     updated: "%{resource} has been updated!"
@@ -34,3 +35,18 @@ en:
       full_name: Full name
       avg_notes: Notes avarange
       birthday: Birthday
+  payments:
+    columns:
+      full_name: Student (full name)
+      january: Jan
+      february: Feb
+      march: Mar
+      april: Apr
+      may: May
+      june: June
+      july: July
+      august: Aug
+      september: Sept
+      october: Oct
+      november: Nov
+      december: Dec

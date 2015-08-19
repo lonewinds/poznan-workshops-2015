@@ -1,0 +1,27 @@
+%tr
+  %td
+    = student.decorate.full_name
+  %td
+    = student.payment.try(:january)
+  %td
+    = student.payment.try(:february)
+  %td
+    = student.payment.try(:march)
+  %td
+    = student.payment.try(:april)
+  %td
+    = student.payment.try(:may)
+  %td
+    = student.payment.try(:june)
+  %td
+    = student.payment.try(:july)
+  %td
+    = student.payment.try(:august)
+  %td
+    = student.payment.try(:september)
+  %td
+    = student.payment.try(:october)
+  %td
+    = student.payment.try(:november)
+  %td
+    = student.payment.try(:december)

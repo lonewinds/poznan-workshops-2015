@@ -1,0 +1,19 @@
+%table.display#students-table
+  %thead
+    %tr
+      %th.full-name= t('payments.columns.full_name')
+      %th= t('payments.columns.january')
+      %th= t('payments.columns.february')
+      %th= t('payments.columns.march')
+      %th= t('payments.columns.april')
+      %th= t('payments.columns.may')
+      %th= t('payments.columns.june')
+      %th= t('payments.columns.july')
+      %th= t('payments.columns.august')
+      %th= t('payments.columns.september')
+      %th= t('payments.columns.october')
+      %th= t('payments.columns.november')
+      %th= t('payments.columns.december')
+  %tbody
+    - students.each do |student|
+      = render 'payments/student', student: student

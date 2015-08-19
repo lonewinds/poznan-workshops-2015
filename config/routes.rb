@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'payments/index'
+
   root controller: :visitors, action: :index
 
   devise_for :users
@@ -14,4 +16,5 @@ Rails.application.routes.draw do
   end
 
   resources :visitors, only: [:index]
+  resources :payments, only: [:index]
 end
